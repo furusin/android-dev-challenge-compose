@@ -15,22 +15,39 @@
  */
 package com.example.androiddevchallenge
 
+import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.res.ResourcesCompat
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.example.androiddevchallenge.ui.theme.Puppy
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                PuppyList(this)
             }
         }
     }
@@ -38,24 +55,50 @@ class MainActivity : AppCompatActivity() {
 
 // Start building your app here!
 @Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+fun PuppyItem(context: Context, puppy: Puppy) {
+    val image = painterResource(id = puppy.imageResId)
+
+    Row(modifier = Modifier.clickable {
+        context.startActivity(DetailActivity.createIntent(context, puppy))
+
+    }) {
+        Image(
+            painter = image,
+            contentDescription = null
+        )
+        Column {
+            Text(text = "name: ${puppy.name}")
+            Text(text = "age: ${puppy.age}")
+        }
     }
 }
 
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
-fun LightPreview() {
-    MyTheme {
-        MyApp()
-    }
-}
+fun PuppyList(context: Context) {
+    val puppy1 = Puppy(
+        name = "Abbie",
+        age = 2,
+        imageResId = R.drawable.puppy1
+    )
 
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp()
+    val puppy2 = Puppy(
+        name = "Bob",
+        age = 3,
+        imageResId = R.drawable.puppy2
+    )
+
+    val puppy3 = Puppy(
+        name = "Oliver",
+        age = 4,
+        imageResId = R.drawable.puppy3
+    )
+    val puppyList = mutableListOf(puppy1, puppy2, puppy3)
+
+    Box(modifier = Modifier) {
+        Column(Modifier.fillMaxWidth()) {
+            puppyList.forEach { puppy ->
+                PuppyItem(context = context, puppy = puppy)
+            }
+        }
     }
 }
