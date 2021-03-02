@@ -48,10 +48,11 @@ class MainActivity : AppCompatActivity() {
 fun PuppyItem(context: Context, puppy: Puppy) {
     val image = painterResource(id = puppy.imageResId)
 
-    Row(modifier = Modifier.clickable {
-        context.startActivity(DetailActivity.createIntent(context, puppy))
-
-    }) {
+    Row(
+        modifier = Modifier.clickable {
+            context.startActivity(DetailActivity.createIntent(context, puppy))
+        }
+    ) {
         Image(
             painter = image,
             contentDescription = null
